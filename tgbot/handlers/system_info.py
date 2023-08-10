@@ -18,7 +18,7 @@ async def get_system_info(message: Message):
 
 
 async def check_service(message: types.Message):
-    SERVICES = ['order', 'celery,', 'image', 'telegram_bot', 'redis']
+    SERVICES = ['order', 'celery', 'image', 'telegram_bot', 'redis']
     TEXT = """"""
     # Splitting the message to get arguments
     # Since subprocess.run isn't async, we use run_in_executor to not block the event loop
