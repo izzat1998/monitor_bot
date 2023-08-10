@@ -28,7 +28,7 @@ async def check_service(message: types.Message):
     service_name = args[0]
 
     # Since subprocess.run isn't async, we use run_in_executor to not block the event loop
-    result = await asyncio.to_thread(subprocess.run, ['systemctl', 'is-active', service_name], capture_output=True,
+    result = await asyncio.to_thread(subprocess.run, ['/usr/bin/journalctl', 'is-active', service_name], capture_output=True,
                                      text=True)
 
     if result.returncode == 0:
