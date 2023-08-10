@@ -18,7 +18,7 @@ async def get_system_info(message: Message):
 
 
 async def check_service(message: types.Message):
-    SERVICES = ['order']
+    SERVICES = ['order', 'celery,', 'image', 'telegram_bot', 'redis']
     TEXT = """"""
     # Splitting the message to get arguments
     # Since subprocess.run isn't async, we use run_in_executor to not block the event loop
@@ -26,20 +26,20 @@ async def check_service(message: types.Message):
         result = await asyncio.to_thread(subprocess.run, ['systemctl', 'status', service_name], capture_output=True,
                                          text=True)
         if result.returncode == 0:
-            status = "is currently running"
+            status = "is currently <b>running</b>"
         elif result.returncode == 1:
-            status = "is currently stopped,error occured"
+            status = "is currently <b>stopped,error occured</b>"
         elif result.returncode == 2:
-            status = "is loaded, but stopped."
+            status = "is loaded, but <b>stopped</b>"
         elif result.returncode == 3:
-            status = "is not loaded"
+            status = "is not </b>loaded</b>"
         elif result.returncode == 4:
-            status = " reports a status of dead"
+            status = " reports a status of <b>dead</b>"
         else:
-            status = "is in an unknown state"
-        TEXT += f"{service_name}: is act {status}\n"
+            status = "is in an <b>unknown state</b>"
+        TEXT += f"<b>{service_name}</b>: is act {status}\n"
 
-    await message.answer(TEXT)
+    await message.answer(TEXT, parse_mode='HTML')
 
 
 def register_system_info(dp: Dispatcher):
