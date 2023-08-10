@@ -18,23 +18,14 @@ async def get_system_info(message: Message):
 
 
 async def check_service(message: types.Message):
+    SERVICES = ['order', 'celery', 'telegram_bot', 'redis', 'image']
+    TEXT = """"""
     # Splitting the message to get arguments
-    args = message.text.split()[1:]
-
-    if len(args) == 0:
-        await message.reply("Please provide a service name. Usage: /check_service <service_name>")
-        return
-
-    service_name = args[0]
-
     # Since subprocess.run isn't async, we use run_in_executor to not block the event loop
-    result = await asyncio.to_thread(subprocess.run, ['systemctl', 'status', service_name], capture_output=True,
-                                     text=True)
+    for service_name in SERVICES:
+        TEXT += f"{service_name}: {await asyncio.to_thread(subprocess.run, ['systemctl', 'status', service_name], capture_output=True, text=True)}\n"
 
-    if result.returncode == 0:
-        await message.reply(f"{service_name} is active.")
-    else:
-        await message.reply(f"{service_name} is not active or doesn't exist.")
+    await message.answer(TEXT)
 
 
 def register_system_info(dp: Dispatcher):
