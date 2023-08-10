@@ -46,10 +46,14 @@ async def check_service(message: types.Message):
 
 async def show_logs(message: Message):
     service_name = message.text
-    cmd = ['journalctl', '--unit', f'{service_name}.service', '-n', '25']  # Last 25 lines of logs for the service
+    cmd = ['journalctl', '--unit', f'{service_name}.service', '-n', '25']
     result = await asyncio.to_thread(subprocess.run, cmd, capture_output=True, text=True)
+
     if result.stdout:
-        await message.answer(f"Logs for {service_name}:\n\n{result.stdout}")
+        log_output = f"Logs for {service_name}:\n\n{result.stdout}"
+        # Split the message into chunks of 4000 characters each
+        for chunk in [log_output[i:i + 4000] for i in range(0, len(log_output), 4000)]:
+            await message.answer(chunk)
     else:
         await message.answer(f"No logs found for {service_name} or an error occurred.")
 
