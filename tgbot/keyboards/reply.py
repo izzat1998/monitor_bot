@@ -1,5 +1,4 @@
-from aiogram.types import ReplyKeyboardMarkup
-from telegram import KeyboardButton
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
 service_keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
 
