@@ -3,9 +3,13 @@ import subprocess
 
 import psutil as psutil
 from aiogram import Dispatcher, types
-from aiogram.types import Message
+from aiogram.types import Message, ReplyKeyboardRemove
 
 from tgbot.keyboards.reply import service_keyboard
+
+
+async def start(message: Message):
+    await message.answer("Please choose an option from menu below", reply_markup=ReplyKeyboardRemove())
 
 
 async def get_system_info(message: Message):
@@ -63,14 +67,16 @@ async def service_logs(message: types.Message):
 
 
 def register_system_info(dp: Dispatcher):
+    dp.register_message_handler(start, commands=["start"], state="*")
     dp.register_message_handler(get_system_info, commands=["system_info"], state="*")
     dp.register_message_handler(check_service, commands=["check_service"], state="*")
     dp.register_message_handler(service_logs, commands=["service_logs"], state="*")
     dp.register_message_handler(show_logs,
                                 lambda message: message.text in [
-                                                                 'order',
-                                                                 'telegram bot',
-                                                                 'image',
-                                                                 'celery',
-                                                                 'redis'],
+                                    'order',
+                                    'telegram bot',
+                                    'image',
+                                    'celery',
+                                    'redis'
+                                ],
                                 state="*")
